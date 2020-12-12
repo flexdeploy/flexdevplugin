@@ -1,0 +1,45 @@
+#!/usr/bin/env node --no-warnings
+
+const watch = require('./commands/watch');
+const bundle = require('./commands/bundle');
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const { showHelp } = require('yargs');
+
+const argv = yargs(hideBin(process.argv))
+    .usage('$0 <command> [options]', 'A utility to build FlexDeploy development plugins', (yargs) => {
+        yargs.command('watch', 'Watches a plugin deploy directory for changes and uploads to local server.', {
+            upload: {
+                alias: 'u',
+                description: 'The auto uploads directory for your local FlexDeploy Server. Also reads from FDPLG_UPLOAD_DIR env variable.'
+            }
+        }),
+            yargs.command('bundle', 'Bundles a development plugin.', {
+                upload: {
+                    alias: 'u',
+                    description: 'The auto uploads directory for your local FlexDeploy Server. Also reads from FDPLG_UPLOAD_DIR env variable.'
+                }
+            })
+    })
+    .argv;
+
+
+
+const uploadDir = argv.upload || process.env.FDPLG_UPLOAD_DIR;
+
+switch (argv._[0]) {
+    case 'watch':
+        watch.watch(uploadDir);
+        break;
+    case 'bundle':
+        bundle.bundle(uploadDir);
+        break;
+    default:
+        showHelp();
+
+
+}
+
+
+
+
