@@ -42,6 +42,8 @@ Options:
                     directory. Used in conjunction with --upload-dir.
   -p, --prefix      The prefix to apply to the plugin version. Defaults to
                     FDPLG_                                   [default: "FDPLG_"]
+  -i, --init-bundle Initialize the watch by bundling and then watching. Use
+                    this if there is already a change you want to bundle.
 ```
 ### Bundle
 ```

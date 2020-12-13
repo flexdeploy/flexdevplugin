@@ -17,6 +17,9 @@ module.exports = {
     uploadJar: (jarPath, uploadDir) => {
         const jarName = jarPath.split('\\').pop();
         fs.copyFileSync(jarPath, `${uploadDir}\\${jarName}`);
-    }
+    },
+    sleep: (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
 
 }

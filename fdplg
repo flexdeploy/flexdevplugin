@@ -25,14 +25,20 @@ const commonArgs = {
 
 const argv = yargs(hideBin(process.argv))
     .usage('$0 <command> [options]', 'A utility to build FlexDeploy development plugins', (yargs) => {
-        yargs.command('watch', 'Watches a plugin deploy directory for changes and uploads to local server.', commonArgs),
-            yargs.command('bundle', 'Bundles a development plugin.', commonArgs)
+        yargs.command('watch', 'Watches a plugin deploy directory for changes and uploads to local server.', {
+            ...commonArgs,
+            'init-bundle': {
+                alias: 'i',
+                description: 'Initialize the watch by bundling and then watching. Use this if there is already a change you want to bundle.'
+            }
+        }),
+        yargs.command('bundle', 'Bundles a development plugin.', commonArgs)
     })
     .argv;
 
 args.setArgs(argv);
 
-if(args.isUpload() && !args.getUploadDir()) {
+if (args.isUpload() && !args.getUploadDir()) {
     console.log('Upload Directory must be set if using --upload. Either pass --upload-dir or set FDPLG_UPLOAD_DIR env variable');
     return;
 }

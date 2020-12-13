@@ -5,18 +5,21 @@ const args = require('../args');
 
 let _running = false;
 
-const watch0 = (runFirst = true) => {
+const _quietTime = 1500;
+
+const watch0 = () => {
     const currentDir = process.cwd();
 
     if (!currentDir.endsWith('deploy')) {
         throw 'Watch can only be run from a plugin deploy directory';
     }
 
-    console.log(`Watching ${currentDir} for changes`);
-    
-    if (runFirst) {
+    if (args.getInitBundle()) {
+        console.log(`Initializing watch - bundling plugin`);
         changeDetected(currentDir);
     }
+
+    console.log(`Watching ${currentDir} for changes`);
 
     fs.watch(currentDir, (event, filename) => {
         changeDetected(currentDir);
@@ -29,6 +32,9 @@ const changeDetected = async (currentDir) => {
         return;
     }
     _running = true;
+
+    //set some quiet time to make sure large file copies are fulling complete
+    await utils.sleep(_quietTime);
 
     pluginDir = utils.getParentFile(currentDir);
     console.log('Change detected, making plugin from ', pluginDir);
