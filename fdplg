@@ -2,42 +2,50 @@
 
 const watch = require('./commands/watch');
 const bundle = require('./commands/bundle');
+const args = require('./args');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const { showHelp } = require('yargs');
 
+const commonArgs = {
+    'upload-dir': {
+        alias: 'd',
+        description: 'The auto uploads directory for your local FlexDeploy Server. Also reads from FDPLG_UPLOAD_DIR env variable.'
+    },
+    upload: {
+        alias: 'u',
+        description: 'Whether the command should auto upload to the upload directory. Used in conjunction with --upload-dir.'
+    },
+    prefix: {
+        alias: 'p',
+        description: 'The prefix to apply to the plugin version. Defaults to FDPLG_',
+        default: 'FDPLG_'
+    }
+}
+
 const argv = yargs(hideBin(process.argv))
     .usage('$0 <command> [options]', 'A utility to build FlexDeploy development plugins', (yargs) => {
-        yargs.command('watch', 'Watches a plugin deploy directory for changes and uploads to local server.', {
-            upload: {
-                alias: 'u',
-                description: 'The auto uploads directory for your local FlexDeploy Server. Also reads from FDPLG_UPLOAD_DIR env variable.'
-            }
-        }),
-            yargs.command('bundle', 'Bundles a development plugin.', {
-                upload: {
-                    alias: 'u',
-                    description: 'The auto uploads directory for your local FlexDeploy Server. Also reads from FDPLG_UPLOAD_DIR env variable.'
-                }
-            })
+        yargs.command('watch', 'Watches a plugin deploy directory for changes and uploads to local server.', commonArgs),
+            yargs.command('bundle', 'Bundles a development plugin.', commonArgs)
     })
     .argv;
 
+args.setArgs(argv);
 
+if(args.isUpload() && !args.getUploadDir()) {
+    console.log('Upload Directory must be set if using --upload. Either pass --upload-dir or set FDPLG_UPLOAD_DIR env variable');
+    return;
+}
 
-const uploadDir = argv.upload || process.env.FDPLG_UPLOAD_DIR;
-
-switch (argv._[0]) {
+switch (args.getCommand()) {
     case 'watch':
-        watch.watch(uploadDir);
+        watch.watch();
         break;
     case 'bundle':
-        bundle.bundle(uploadDir);
+        bundle.bundle();
         break;
     default:
         showHelp();
-
-
 }
 
 

@@ -1,13 +1,12 @@
 const plugin = require('../plugin');
 const fs = require('fs');
 const utils = require('../utils');
+const args = require('../args');
 
 let _running = false;
-let _uploadDir;
 
-const watch0 = (uploadDir, runFirst = true) => {
+const watch0 = (runFirst = true) => {
     const currentDir = process.cwd();
-    _uploadDir = uploadDir;
 
     if (!currentDir.endsWith('deploy')) {
         throw 'Watch can only be run from a plugin deploy directory';
@@ -26,11 +25,9 @@ const watch0 = (uploadDir, runFirst = true) => {
 }
 
 const changeDetected = async (currentDir) => {
-    console.log(_running);
     if (_running) {
         return;
     }
-
     _running = true;
 
     pluginDir = utils.getParentFile(currentDir);
@@ -39,9 +36,9 @@ const changeDetected = async (currentDir) => {
         const jarPath = await plugin.makePlugin(pluginDir);
         console.log('Bundled plugin ', jarPath);
 
-        if(_uploadDir) {
-            utils.uploadJar(jarPath, _uploadDir);
-            console.log(`Copied ${jarPath.split('\\').pop()} to ${_uploadDir}`);
+        if(args.isUpload()) {
+            utils.uploadJar(jarPath, args.getUploadDir());
+            console.log(`Copied ${jarPath.split('\\').pop()} to ${args.getUploadDir()}`);
         }
         
 

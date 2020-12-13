@@ -3,6 +3,7 @@ const utils = require('./utils');
 const xml2js = require('xml2js');
 const extract = require('extract-zip');
 const cmd = require('node-cmd');
+const args = require('./args');
 
 var _pluginTempDir;
 var _pluginDir;
@@ -16,7 +17,7 @@ const makePlugin0 = async (pluginDirectory) => {
     await copyAndUpdatePluginXML();
     copyMasterProperties();
     copySetupScripts();
-    copyAndExtractLib();
+    await copyAndExtractLib();
     copyPluginJar();
 
     return makeJar();
@@ -40,7 +41,7 @@ const copyAndUpdatePluginXML = async () => {
 
     let result = await xml2js.parseStringPromise(xmlData);
 
-    const newVersion = 'FXDP-' + Date.now();
+    const newVersion = args.getVersionPrefix() + Date.now();
     result.PluginDefinition.Version[0] = newVersion;
     var builder = new xml2js.Builder();
     var xml = builder.buildObject(result);
@@ -71,14 +72,14 @@ const copySetupScripts = () => {
     console.log('Copied setup.sh and setup.bat');
 }
 
-const copyAndExtractLib = () => {
+const copyAndExtractLib = async () => {
     const libJar = utils.getChildFile(_pluginDir, 'deploy\\lib.jar');
     const tempLibJar = utils.getChildFile(_pluginTempDir, 'lib\\lib.jar');
     if (fs.existsSync(libJar)) {
         try {
             fs.copyFileSync(libJar, tempLibJar);
-            extract(tempLibJar, { dir: utils.getParentFile(tempLibJar) });
-
+            await extract(tempLibJar, { dir: utils.getParentFile(tempLibJar),  });
+            console.log('removing', tempLibJar);
             fs.unlinkSync(tempLibJar);
             fs.unlinkSync(libJar);
 

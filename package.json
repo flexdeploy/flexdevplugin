@@ -1,13 +1,16 @@
 {
   "name": "flexdevplugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility to upload development plugins to a local FlexDeploy application",
-  "main": "index.js",
+  "main": "fdplg",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joel Wenzel",
   "license": "ISC",
+  "repository": {
+    "url": "https://github.com/flexdeploy/flexdevplugin/tree/master"
+  },
   "bin": {
     "fdplg": "./fdplg"
   },
