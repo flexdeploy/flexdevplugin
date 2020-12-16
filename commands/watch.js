@@ -44,7 +44,9 @@ const changeDetected = async (currentDir) => {
 
         if(args.isUpload()) {
             utils.uploadJar(jarPath, args.getUploadDir());
-            console.log(`Copied ${jarPath.split('\\').pop()} to ${args.getUploadDir()}`);
+            const jarName = jarPath.split('\\').pop();
+            console.log(`Copied ${jarName} to ${args.getUploadDir()}... waiting for upload verification...`);
+            confirmUpload(args.getUploadDir(), jarName);
         }
         
 
@@ -57,7 +59,22 @@ const changeDetected = async (currentDir) => {
     }
 }
 
+const confirmUpload = (targetDirectory, jarName) => {
+    
+    let waitingLog = setInterval(() => {
+        console.log('.');
+    },5000)
 
+    let uploadWatcher = fs.watch(targetDirectory, (event, filename) => {
+        if(filename == jarName) {
+            console.log(`Uploaded ${jarName} to FlexDeploy!`);
+            uploadWatcher.close();
+            clearInterval(waitingLog);
+        }
+    })
+
+    
+}
 
 module.exports = {
     watch: watch0
