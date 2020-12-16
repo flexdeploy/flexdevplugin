@@ -64,11 +64,11 @@ Options:
 ## Sample Commands
 Watch directory for plugin changes and upload bundled plugin to C:\TEMP\FD\Plugins
 ```
-fdplg watch --upload --upload-dir=C:\TEMP\FD\Plugins
+fdplg watch --upload --upload-dir=C:\TEMP\flexdeploy\application\plugins
 ```
 Watch directory for plugin changes and upload bundled plugin to FDPLG_UPLOAD_DIR environment variable
 ```
-set FDPLG_UPLOAD_DIR=C:\TEMP\FD\Plugins
+set FDPLG_UPLOAD_DIR=C:\TEMP\flexdeploy\application\plugins
 fdplg watch --upload
 ```
 Bundle plugin with a different version prefix
