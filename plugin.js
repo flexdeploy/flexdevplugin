@@ -9,12 +9,12 @@ var _pluginTempDir;
 var _pluginDir;
 var _pluginName;
 
-const makePlugin0 = async (pluginDirectory) => {
+const makePlugin0 = async (pluginDirectory, version) => {
     _pluginDir = pluginDirectory;
     _pluginName = pluginDirectory.split('\\').pop();
     _pluginTempDir = makePluginTempDir();
     
-    await copyAndUpdatePluginXML();
+    await copyAndUpdatePluginXML(version);
     copyMasterProperties();
     copySetupScripts();
     await copyAndExtractLib();
@@ -33,7 +33,7 @@ const makePluginTempDir = () => {
     return tempDir;
 }
 
-const copyAndUpdatePluginXML = async () => {
+const copyAndUpdatePluginXML = async (version) => {
     const tempPluginXML = _pluginTempDir + '\\plugin.xml';
     fs.copyFileSync(_pluginDir + "\\plugin\\plugin.xml", tempPluginXML);
 
@@ -41,7 +41,7 @@ const copyAndUpdatePluginXML = async () => {
 
     let result = await xml2js.parseStringPromise(xmlData);
 
-    const newVersion = args.getVersionPrefix() + Date.now();
+    const newVersion = version || args.getVersionPrefix() + Date.now();
     result.PluginDefinition.Version[0] = newVersion;
     var builder = new xml2js.Builder();
     var xml = builder.buildObject(result);

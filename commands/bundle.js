@@ -16,7 +16,7 @@ const bundle0 = (uploadDir) => {
 
 const make = async (pluginDir) => {
     try {
-        const jarPath = await plugin.makePlugin(pluginDir);
+        const jarPath = await plugin.makePlugin(pluginDir, args.getVersion());
         console.log('Bundled plugin ', jarPath);
 
         if(args.isUpload()) {

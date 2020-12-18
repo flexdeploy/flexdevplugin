@@ -1,6 +1,6 @@
 {
   "name": "flexdevplugin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A utility to upload development plugins to a local FlexDeploy application",
   "main": "fdplg",
   "scripts": {

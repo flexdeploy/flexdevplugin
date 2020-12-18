@@ -3,6 +3,7 @@ let _upload = false;
 let _versionPrefix;
 let _command;
 let _initBundle;
+let _version;
 
 module.exports = {
     setArgs: args => {
@@ -11,6 +12,7 @@ module.exports = {
         _versionPrefix = args.prefix;
         _uploadDir = args['upload-dir'] || process.env.FDPLG_UPLOAD_DIR;
         _initBundle = args['init-bundle'];
+        _version = args['plugin-version'];
     },
     getUploadDir: () => {
         return _uploadDir;
@@ -20,6 +22,9 @@ module.exports = {
     },
     getVersionPrefix: () => {
         return _versionPrefix;
+    },
+    getVersion: () => {
+        return _version;
     },
     getInitBundle: () => {
         return !!_initBundle;

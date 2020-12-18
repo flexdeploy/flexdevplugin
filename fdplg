@@ -32,7 +32,13 @@ const argv = yargs(hideBin(process.argv))
                 description: 'Initialize the watch by bundling and then watching. Use this if there is already a change you want to bundle.'
             }
         }),
-        yargs.command('bundle', 'Bundles a development plugin.', commonArgs)
+        yargs.command('bundle', 'Bundles a development plugin.', {
+            ...commonArgs,
+            'plugin-version': {
+                alias: 'r',
+                description: 'Specify the exact plugin version you want to use. When set, this will ignore the prefix.'
+            }
+        })
     })
     .argv;
 
