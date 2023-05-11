@@ -17,6 +17,7 @@ const makePlugin0 = async (pluginDirectory, version) => {
     await copyAndUpdatePluginXML(version);
     copyMasterProperties();
     copySetupScripts();
+    copyFileTypes();
     await copyAndExtractLib();
     copyPluginJar();
 
@@ -56,6 +57,17 @@ const copyMasterProperties = () => {
 
     fs.copyFileSync(masterProps, _pluginTempDir + "\\properties\\FD_MASTER_PROPERTY_LISTING.xml");
     console.log('Copied FD_MASTER_PROPERTY_LISTING.xml');
+}
+
+const copyFileTypes = () => {
+    const fileTypesDir = utils.getChildFile(_pluginDir, 'plugin\\filetypes');
+    
+    if(fs.existsSync(fileTypesDir))
+    {
+        fs.cpSync(fileTypesDir, _pluginTempDir + "\\filetypes");
+    }
+    
+    console.log('Copied filetypes');
 }
 
 const copySetupScripts = () => {
